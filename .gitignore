@@ -31,3 +31,5 @@ build/
 
 android/ncnn-20240102-android-vulkan-shared/
 android/opencv-mobile-4.9.0-android/
+
+.vscode/
