@@ -15,6 +15,10 @@
 #define FFI_PLUGIN_EXPORT
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // A very short-lived native function.
 //
 // For very short-lived functions, it is fine to call them on the main isolate.
@@ -28,3 +32,7 @@ FFI_PLUGIN_EXPORT intptr_t sum(intptr_t a, intptr_t b);
 // block Dart execution. This will cause dropped frames in Flutter applications.
 // Instead, call these native functions on a separate isolate.
 FFI_PLUGIN_EXPORT intptr_t sum_long_running(intptr_t a, intptr_t b);
+
+#ifdef __cplusplus
+}
+#endif

@@ -43,7 +43,7 @@ include_directories(
 )
 
 # # flutter_ncnn_yolov8_seg
-add_library(flutter_ncnn_yolov8_seg_library SHARED
+add_library(flutter_ncnn_yolov8_seg SHARED
   "flutter_ncnn_yolov8_seg.cc"
 )
 target_link_libraries(flutter_ncnn_yolov8_seg ncnn ${OpenCV_LIBS})

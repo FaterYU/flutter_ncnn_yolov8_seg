@@ -31,7 +31,7 @@ android {
 
     // Bumping the plugin compileSdk version requires all clients of this plugin
     // to bump the version in their app.
-    compileSdk 34
+    compileSdkVersion 31
 
     // Use the NDK version
     // declared in /android/app/build.gradle file of the Flutter project.
@@ -60,6 +60,10 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
+        ndk {
+            moduleName "flutter_ncnn_yolov8_seg"
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
     }
 }
