@@ -67,4 +67,118 @@ class FlutterNcnnYolov8SegBindings {
           'sum_long_running');
   late final _sum_long_running =
       _sum_long_runningPtr.asFunction<int Function(int, int)>();
+
+  ffi.Pointer<Yolo8Result> createResult() {
+    return _createResult();
+  }
+
+  late final _createResultPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Yolo8Result> Function()>>(
+          'createResult');
+  late final _createResult =
+      _createResultPtr.asFunction<ffi.Pointer<Yolo8Result> Function()>();
+
+  int destroyResult(
+    ffi.Pointer<Yolo8Result> result,
+  ) {
+    return _destroyResult(
+      result,
+    );
+  }
+
+  late final _destroyResultPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<Yolo8Result>)>>(
+          'destroyResult');
+  late final _destroyResult =
+      _destroyResultPtr.asFunction<int Function(ffi.Pointer<Yolo8Result>)>();
+
+  ffi.Pointer<Yolo8Model> createModel() {
+    return _createModel();
+  }
+
+  late final _createModelPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Yolo8Model> Function()>>(
+          'createModel');
+  late final _createModel =
+      _createModelPtr.asFunction<ffi.Pointer<Yolo8Model> Function()>();
+
+  int destroyModel(
+    ffi.Pointer<Yolo8Model> model,
+  ) {
+    return _destroyModel(
+      model,
+    );
+  }
+
+  late final _destroyModelPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<Yolo8Model>)>>(
+          'destroyModel');
+  late final _destroyModel =
+      _destroyModelPtr.asFunction<int Function(ffi.Pointer<Yolo8Model>)>();
+
+  int processImage(
+    ffi.Pointer<Yolo8Model> model,
+    ffi.Pointer<ffi.Uint8> pixels,
+    ffi.Pointer<Yolo8Result> result,
+    int width,
+    int height,
+  ) {
+    return _processImage(
+      model,
+      pixels,
+      result,
+      width,
+      height,
+    );
+  }
+
+  late final _processImagePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<Yolo8Model>, ffi.Pointer<ffi.Uint8>,
+              ffi.Pointer<Yolo8Result>, ffi.Int, ffi.Int)>>('processImage');
+  late final _processImage = _processImagePtr.asFunction<
+      int Function(ffi.Pointer<Yolo8Model>, ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<Yolo8Result>, int, int)>();
+}
+
+final class Rect extends ffi.Struct {
+  @ffi.Int()
+  external int x;
+
+  @ffi.Int()
+  external int y;
+
+  @ffi.Int()
+  external int width;
+
+  @ffi.Int()
+  external int height;
+}
+
+final class ObjectSeg extends ffi.Struct {
+  @ffi.Int()
+  external int label;
+
+  @ffi.Float()
+  external double prob;
+
+  external Rect rect;
+
+  external ffi.Pointer<ffi.Uint8> mask;
+}
+
+final class Yolo8Result extends ffi.Struct {
+  @ffi.Int()
+  external int count;
+
+  external ffi.Pointer<ObjectSeg> objects;
+
+  @ffi.Int()
+  external int latency;
+}
+
+final class Yolo8Model extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> paramPath;
+
+  external ffi.Pointer<ffi.Char> binPath;
 }

@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// ncnn
+#include "net.h"
+
 #if _WIN32
 #include <windows.h>
 #else
@@ -33,57 +36,42 @@ FFI_PLUGIN_EXPORT intptr_t sum(intptr_t a, intptr_t b);
 // Instead, call these native functions on a separate isolate.
 FFI_PLUGIN_EXPORT intptr_t sum_long_running(intptr_t a, intptr_t b);
 
-FFI_PLUGIN_EXPORT typedef int yolov8_err_t;
-
-#define YOLOvV8_OK 0
-#define YOLOV8_ERROR -1
-
-FFI_PLUGIN_EXPORT struct YoloV8 {
-  const char *model_path;  // path to model file
-  const char *param_path;  // path to param file
-
-  const ncnn::Net *net;
-
-  float nms_thresh;   // nms threshold
-  float conf_thresh;  // threshold of bounding box prob
-  float target_size;  // target image size after resize, might use 416 for small
-                      // model
+FFI_PLUGIN_EXPORT struct Rect {
+  int x;
+  int y;
+  int width;
+  int height;
 };
 
-// ncnn::Mat::PixelType
-FFI_PLUGIN_EXPORT enum PixelType {
-  PIXEL_RGB = 1,
-  PIXEL_BGR = 2,
-  PIXEL_GRAY = 3,
-  PIXEL_RGBA = 4,
-  PIXEL_BGRA = 5,
-  PIXEL_YUV = 6,
-};
-
-FFI_PLUGIN_EXPORT struct Object {
-  cv::Rect_<float> rect;
+FFI_PLUGIN_EXPORT struct ObjectSeg {
   int label;
   float prob;
-  cv::Mat mask;
-  std::vector<float> mask_feat;
+  struct Rect rect;
+  uint8_t* mask;
 };
 
-FFI_PLUGIN_EXPORT struct Result {
+FFI_PLUGIN_EXPORT struct Yolo8Result {
   int count;
-  std::vector<Object> objects;
+  struct ObjectSeg* objects;
+  int latency;
 };
 
-FFI_PLUGIN_EXPORT yolov8_err_t LoadModel(const char *model_path,
-                                         const char *param_path,
-                                         float nms_thresh, float conf_thresh,
-                                         struct YoloV8 *yolov8);
+FFI_PLUGIN_EXPORT struct Yolo8Model {
+  char* paramPath;
+  char* binPath;
+};
 
-FFI_PLUGIN_EXPORT yolov8_err_t Inference(const struct YoloV8 *yolov8,
-                                         const uint8_t *pixels,
-                                         enum PixelType pixel_type,
-                                         struct Result *result);
+FFI_PLUGIN_EXPORT struct Yolo8Result* createResult();
 
-FFI_PLUGIN_EXPORT yolov8_err_t ReleaseModel(const struct YoloV8 *yolov8);
+FFI_PLUGIN_EXPORT int destroyResult(struct Yolo8Result* result);
+
+FFI_PLUGIN_EXPORT struct Yolo8Model* createModel();
+
+FFI_PLUGIN_EXPORT int destroyModel(struct Yolo8Model* model);
+
+FFI_PLUGIN_EXPORT int processImage(struct Yolo8Model* model, const uint8_t* pixels,
+                                   struct Yolo8Result* result, int width,
+                                   int height);
 
 #ifdef __cplusplus
 }
